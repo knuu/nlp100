@@ -1,3 +1,10 @@
 chap02/col*.txt
 chap02/out_*
 chap02/out.*
+
+*/*.output
+*/*.json
+*/*.mecab
+*/*.txt
+*/*.pos
+*/*.neg
