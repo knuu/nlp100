@@ -1,6 +1,12 @@
+.python-version
 chap02/col*.txt
 chap02/out_*
 chap02/out.*
+
+chap05/*.cabocha
+chap06/*.xml
+
+*/__pycache__/*
 
 */*.output
 */*.json
@@ -8,3 +14,4 @@ chap02/out.*
 */*.txt
 */*.pos
 */*.neg
+chap08/*.pickle
