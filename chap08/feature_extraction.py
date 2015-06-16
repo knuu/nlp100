@@ -38,12 +38,12 @@ class Features:
                 cnt += 1
         return features
 
-def feature_extraction(data_path, feature):
+def feature_extraction(data_path, feature_words):
     feature_vectors = []
     with open(data_path) as f:
         for line in f.readlines():
             words = line.split()
             words, cls = words[1:], int(words[0])
-            feature_vector = [1 if f in words else 0 for f in feature.feature_words]
+            feature_vector = [1 if f in words else 0 for f in feature_words]
             feature_vectors.append((cls, feature_vector))
     return feature_vectors

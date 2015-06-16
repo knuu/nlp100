@@ -24,35 +24,28 @@ class SentenceData:
     def make_counter(self):
         return Counter(self.words)
 
-class Features:
-    def __init__(self, cls1, cls2, top=200):
-        self.cls1_top = dict(cls1.make_counter().most_common(top))
-        self.cls2_top = dict(cls2.make_counter().most_common(top))
-        self.feature_words = self.make_features(self.cls1_top, self.cls2_top) + self.make_features(self.cls2_top, self.cls1_top)
+def make_feature_words(cls1, cls2, top=2000):
+    cls1_top = dict(cls1.make_counter().most_common(top//2))
+    cls2_top = dict(cls2.make_counter().most_common(top//2))
+    return list(set(list(cls1_top.keys()) + list(cls2_top.keys())))
 
-    def make_features(self, cls1_top, cls2_top):
-        cnt = 0
-        features = []
-        for key in cls1_top.keys():
-            if not key in cls2_top.keys():
-                features.append(key)
-                cnt += 1
-        return features
-
-def feature_extraction(data_path, feature):
+def feature_extraction(data_path, feature_words):
     feature_vectors = []
     with open(data_path) as f:
         for line in f.readlines():
             words = line.split()
             words, cls = words[1:], int(words[0])
-            feature_vector = [1 if f in words else 0 for f in feature.feature_words]
+            feature_vector = [1 if f in words else 0 for f in feature_words]
             feature_vectors.append((cls, feature_vector))
     return feature_vectors
 
 pos = SentenceData('rt-polarity.pos', encode='ISO-8859-1')
 neg = SentenceData('rt-polarity.neg', encode='ISO-8859-1')
-features = Features(pos, neg)
+feature_words = make_feature_words(pos, neg)
 with open('feature_words.pickle', 'wb') as f:
-    pickle.dump(features.feature_words, f)
-answer_data = feature_extraction('sentiment.txt', features)
+    pickle.dump(feature_words, f)
+answer_data = feature_extraction('sentiment.txt', feature_words)
 
+#print(len(feature_words))
+#print(answer_data[0])
+#print(sum(answer_data[0][1]))

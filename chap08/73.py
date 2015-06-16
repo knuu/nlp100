@@ -18,16 +18,15 @@ def Logistic_regression(answer_data, max_iter=100, C=1.0, learning_rate=0.1, dec
             x, y = data[1], data[0]
             predict = 1 - sigmoid(y * inner(w, x))
             for i in range(len(x)):
-                regular = 2 * C * w[i]
+                regular = 2 * C/deg * w[i]
                 w[i] = w[i] - learning_rate * (-y * predict * x[i] + regular)
             learning_rate *= decrease
     return w    
 
-pos = SentenceData('rt-polarity.pos', encode='ISO-8859-1')
-neg = SentenceData('rt-polarity.neg', encode='ISO-8859-1')
-features = Features(pos, neg)
-answer_data = feature_extraction('sentiment.txt', features)
-w = Logistic_regression(answer_data)
+with open('feature_words.pickle', 'rb') as f:
+    feature_words = pickle.load(f)
+answer_data = feature_extraction('sentiment.txt', feature_words)
+w = Logistic_regression(answer_data, max_iter=100)
 with open('w.pickle', 'wb') as f:
     pickle.dump(w, f)
-#print(w)
+print(w)
